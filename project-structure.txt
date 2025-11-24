@@ -1,0 +1,43 @@
+ecommerce-app/
+├── backend/
+│   ├── config/
+│   │   └── db.js
+│   ├── middleware/
+│   │   └── auth.js
+│   ├── routes/
+│   │   ├── auth.js
+│   │   ├── products.js
+│   │   ├── categories.js
+│   │   ├── cart.js
+│   │   └── orders.js
+│   ├── .env.example
+│   ├── server.js
+│   └── package.json
+├── frontend/
+│   ├── app/
+│   │   ├── layout.js
+│   │   ├── page.js
+│   │   ├── products/
+│   │   │   ├── page.js
+│   │   │   └── [id]/
+│   │   │       └── page.js
+│   │   ├── cart/
+│   │   │   └── page.js
+│   │   ├── checkout/
+│   │   │   └── page.js
+│   │   ├── admin/
+│   │   │   └── page.js
+│   │   ├── login/
+│   │   │   └── page.js
+│   │   └── register/
+│   │       └── page.js
+│   ├── components/
+│   │   ├── Navbar.js
+│   │   ├── ProductCard.js
+│   │   ├── Footer.js
+│   │   └── AdminProductForm.js
+│   ├── .env.local.example
+│   ├── next.config.js
+│   └── package.json
+└── database/
+    └── schema.sql
