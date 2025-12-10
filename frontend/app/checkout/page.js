@@ -13,16 +13,16 @@ export default function CheckoutPage() {
   }, []);
 
   const fetchCart = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/login');
-      return;
-    }
-
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: 'include'
       });
+      
+      if (res.status === 401) {
+        router.push('/login');
+        return;
+      }
+      
       const data = await res.json();
       setCart(data);
     } catch (error) {
@@ -34,14 +34,13 @@ export default function CheckoutPage() {
     e.preventDefault();
     setLoading(true);
 
-    const token = localStorage.getItem('token');
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
+        credentials: 'include',
         body: JSON.stringify({ shipping_address: shippingAddress })
       });
 

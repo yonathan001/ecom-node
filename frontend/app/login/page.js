@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { signIn } from '../../lib/auth-client';
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -13,21 +14,17 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+      const { data, error } = await signIn.email({
+        email: formData.email,
+        password: formData.password,
       });
 
-      const data = await res.json();
-
-      if (res.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
+      if (error) {
+        alert(error.message || 'Login failed');
+      } else {
         alert('Login successful!');
         router.push('/products');
-      } else {
-        alert(data.error || 'Login failed');
+        router.refresh();
       }
     } catch (error) {
       alert('Error: ' + error.message);

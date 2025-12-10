@@ -1,11 +1,11 @@
 const express = require('express');
 const db = require('../config/db');
-const { auth } = require('../middleware/auth');
+const { betterAuthMiddleware } = require('../middleware/better-auth');
 
 const router = express.Router();
 
 // Get user's orders
-router.get('/', auth, async (req, res) => {
+router.get('/', betterAuthMiddleware, async (req, res) => {
   try {
     const [orders] = await db.query(
       'SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC',
@@ -31,7 +31,7 @@ router.get('/', auth, async (req, res) => {
 });
 
 // Create order
-router.post('/', auth, async (req, res) => {
+router.post('/', betterAuthMiddleware, async (req, res) => {
   const connection = await db.getConnection();
   
   try {
@@ -108,7 +108,7 @@ router.post('/', auth, async (req, res) => {
 });
 
 // Get single order
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', betterAuthMiddleware, async (req, res) => {
   try {
     const [orders] = await db.query(
       'SELECT * FROM orders WHERE id = ? AND user_id = ?',

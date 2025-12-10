@@ -35,7 +35,6 @@ export default function AdminProductForm({ product, onSuccess }) {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem('token');
       const url = product
         ? `${process.env.NEXT_PUBLIC_API_URL}/products/${product.id}`
         : `${process.env.NEXT_PUBLIC_API_URL}/products`;
@@ -44,8 +43,8 @@ export default function AdminProductForm({ product, onSuccess }) {
         method: product ? 'PUT' : 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
+        credentials: 'include',
         body: JSON.stringify(formData)
       });
 

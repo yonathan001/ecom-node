@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { signUp } from '../../lib/auth-client';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
@@ -13,21 +14,17 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+      const { data, error } = await signUp.email({
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
       });
 
-      const data = await res.json();
-
-      if (res.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
+      if (error) {
+        alert(error.message || 'Registration failed');
+      } else {
         alert('Registration successful!');
         router.push('/products');
-      } else {
-        alert(data.error || 'Registration failed');
       }
     } catch (error) {
       alert('Error: ' + error.message);

@@ -1,0 +1,135 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model user {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?   @db.Text
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  is_admin      Boolean   @default(false)
+  
+  sessions      session[]
+  accounts      account[]
+  orders        orders[]
+  cart          cart[]
+}
+
+model session {
+  id        String   @id @default(uuid())
+  userId    String
+  expiresAt DateTime
+  token     String   @unique @db.VarChar(500)
+  ipAddress String?
+  userAgent String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+}
+
+model account {
+  id           String    @id @default(uuid())
+  userId       String
+  accountId    String
+  providerId   String
+  accessToken  String?   @db.Text
+  refreshToken String?   @db.Text
+  idToken      String?   @db.Text
+  expiresAt    DateTime?
+  password     String?   @db.Text
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  user         user      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+}
+
+model verification {
+  id         String   @id @default(uuid())
+  identifier String
+  value      String   @db.Text
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model categories {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?   @db.Text
+  created_at  DateTime  @default(now())
+  
+  products    products[]
+}
+
+model products {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?   @db.Text
+  price       Decimal   @db.Decimal(10, 2)
+  image_url   String?
+  category_id Int?
+  stock       Int       @default(0)
+  created_at  DateTime  @default(now())
+  
+  category    categories?   @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  cart        cart[]
+  order_items order_items[]
+  
+  @@index([category_id])
+}
+
+model cart {
+  id         Int      @id @default(autoincrement())
+  user_id    String
+  product_id Int
+  quantity   Int      @default(1)
+  created_at DateTime @default(now())
+  
+  user       user     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  product    products @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  
+  @@unique([user_id, product_id])
+  @@index([user_id])
+  @@index([product_id])
+}
+
+model orders {
+  id               Int      @id @default(autoincrement())
+  user_id          String
+  total_amount     Decimal  @db.Decimal(10, 2)
+  status           String   @default("pending")
+  shipping_address String   @db.Text
+  created_at       DateTime @default(now())
+  
+  user             user          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  order_items      order_items[]
+  
+  @@index([user_id])
+}
+
+model order_items {
+  id         Int      @id @default(autoincrement())
+  order_id   Int
+  product_id Int
+  quantity   Int
+  price      Decimal  @db.Decimal(10, 2)
+  
+  order      orders   @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  product    products @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  
+  @@index([order_id])
+  @@index([product_id])
+}

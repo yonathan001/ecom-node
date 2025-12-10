@@ -1,6 +1,6 @@
 const express = require('express');
 const db = require('../config/db');
-const { auth, adminAuth } = require('../middleware/auth');
+const { betterAuthMiddleware, adminAuthMiddleware } = require('../middleware/better-auth');
 
 const router = express.Router();
 
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 });
 
 // Create category (admin only)
-router.post('/', auth, adminAuth, async (req, res) => {
+router.post('/', betterAuthMiddleware, adminAuthMiddleware, async (req, res) => {
   try {
     const { name, description } = req.body;
 
@@ -38,7 +38,7 @@ router.post('/', auth, adminAuth, async (req, res) => {
 });
 
 // Update category (admin only)
-router.put('/:id', auth, adminAuth, async (req, res) => {
+router.put('/:id', betterAuthMiddleware, adminAuthMiddleware, async (req, res) => {
   try {
     const { name, description } = req.body;
 
@@ -58,7 +58,7 @@ router.put('/:id', auth, adminAuth, async (req, res) => {
 });
 
 // Delete category (admin only)
-router.delete('/:id', auth, adminAuth, async (req, res) => {
+router.delete('/:id', betterAuthMiddleware, adminAuthMiddleware, async (req, res) => {
   try {
     const [result] = await db.query('DELETE FROM categories WHERE id = ?', [req.params.id]);
 

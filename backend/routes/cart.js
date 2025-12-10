@@ -1,11 +1,11 @@
 const express = require('express');
 const db = require('../config/db');
-const { auth } = require('../middleware/auth');
+const { betterAuthMiddleware } = require('../middleware/better-auth');
 
 const router = express.Router();
 
 // Get user's cart
-router.get('/', auth, async (req, res) => {
+router.get('/', betterAuthMiddleware, async (req, res) => {
   try {
     const [cartItems] = await db.query(
       `SELECT c.*, p.name, p.price, p.image_url, p.stock 
@@ -24,7 +24,7 @@ router.get('/', auth, async (req, res) => {
 });
 
 // Add to cart
-router.post('/', auth, async (req, res) => {
+router.post('/', betterAuthMiddleware, async (req, res) => {
   try {
     const { product_id, quantity } = req.body;
 
@@ -69,7 +69,7 @@ router.post('/', auth, async (req, res) => {
 });
 
 // Update cart item quantity
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', betterAuthMiddleware, async (req, res) => {
   try {
     const { quantity } = req.body;
 
@@ -93,7 +93,7 @@ router.put('/:id', auth, async (req, res) => {
 });
 
 // Remove from cart
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', betterAuthMiddleware, async (req, res) => {
   try {
     const [result] = await db.query(
       'DELETE FROM cart WHERE id = ? AND user_id = ?',
@@ -111,7 +111,7 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 // Clear cart
-router.delete('/', auth, async (req, res) => {
+router.delete('/', betterAuthMiddleware, async (req, res) => {
   try {
     await db.query('DELETE FROM cart WHERE user_id = ?', [req.user.id]);
     res.json({ message: 'Cart cleared' });

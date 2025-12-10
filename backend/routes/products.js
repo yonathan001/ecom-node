@@ -1,6 +1,6 @@
 const express = require('express');
 const db = require('../config/db');
-const { auth, adminAuth } = require('../middleware/auth');
+const { betterAuthMiddleware, adminAuthMiddleware } = require('../middleware/better-auth');
 
 const router = express.Router();
 
@@ -51,7 +51,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create product (admin only)
-router.post('/', auth, adminAuth, async (req, res) => {
+router.post('/', betterAuthMiddleware, adminAuthMiddleware, async (req, res) => {
   try {
     const { name, description, price, image_url, category_id, stock } = req.body;
 
@@ -74,7 +74,7 @@ router.post('/', auth, adminAuth, async (req, res) => {
 });
 
 // Update product (admin only)
-router.put('/:id', auth, adminAuth, async (req, res) => {
+router.put('/:id', betterAuthMiddleware, adminAuthMiddleware, async (req, res) => {
   try {
     const { name, description, price, image_url, category_id, stock } = req.body;
 
@@ -94,7 +94,7 @@ router.put('/:id', auth, adminAuth, async (req, res) => {
 });
 
 // Delete product (admin only)
-router.delete('/:id', auth, adminAuth, async (req, res) => {
+router.delete('/:id', betterAuthMiddleware, adminAuthMiddleware, async (req, res) => {
   try {
     const [result] = await db.query('DELETE FROM products WHERE id = ?', [req.params.id]);
 

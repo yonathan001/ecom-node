@@ -25,26 +25,26 @@ export default function ProductDetailPage({ params }) {
   };
 
   const addToCart = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('Please login to add items to cart');
-      router.push('/login');
-      return;
-    }
-
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
+        credentials: 'include',
         body: JSON.stringify({
           product_id: product.id,
           quantity
         })
       });
 
+      if (res.status === 401) {
+        alert('Please login to add items to cart');
+        router.push('/login');
+        return;
+      }
+
+      
       if (res.ok) {
         alert('Added to cart!');
         router.push('/cart');

@@ -13,16 +13,16 @@ export default function CartPage() {
   }, []);
 
   const fetchCart = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/login');
-      return;
-    }
-
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: 'include'
       });
+      
+      if (res.status === 401) {
+        router.push('/login');
+        return;
+      }
+      
       const data = await res.json();
       setCart(data);
     } catch (error) {
@@ -33,14 +33,13 @@ export default function CartPage() {
   };
 
   const updateQuantity = async (itemId, quantity) => {
-    const token = localStorage.getItem('token');
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/${itemId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
+        credentials: 'include',
         body: JSON.stringify({ quantity })
       });
 
@@ -53,11 +52,10 @@ export default function CartPage() {
   };
 
   const removeItem = async (itemId) => {
-    const token = localStorage.getItem('token');
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/${itemId}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: 'include'
       });
 
       if (res.ok) {

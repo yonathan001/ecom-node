@@ -10,14 +10,26 @@ export default function AdminPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (!user || !JSON.parse(user).is_admin) {
-      alert('Admin access required');
-      router.push('/');
-      return;
-    }
-    fetchProducts();
+    checkAuth();
   }, []);
+
+  const checkAuth = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
+        credentials: 'include'
+      });
+      
+      if (res.status === 401) {
+        alert('Please login first');
+        router.push('/login');
+        return;
+      }
+      
+      fetchProducts();
+    } catch (error) {
+      console.error('Auth check error:', error);
+    }
+  };
 
   const fetchProducts = async () => {
     try {
@@ -33,10 +45,9 @@ export default function AdminPage() {
     if (!confirm('Are you sure you want to delete this product?')) return;
 
     try {
-      const token = localStorage.getItem('token');
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: 'include'
       });
 
       if (res.ok) {

@@ -1,24 +1,19 @@
 'use client';
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSession, signOut } from '../lib/auth-client';
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
-  const [user, setUser] = useState(null);
+  const { data: session } = useSession();
+  const router = useRouter();
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
-    if (token && userData) {
-      setUser(JSON.parse(userData));
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
-    window.location.href = '/';
+  const handleLogout = async () => {
+    await signOut();
+    router.push('/');
+    router.refresh();
   };
+
+  const user = session?.user;
 
   return (
     <nav className="bg-blue-600 text-white shadow-lg">
