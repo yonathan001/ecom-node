@@ -1,12 +1,15 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '../../../components/Toast';
+import { formatPrice } from '../../../lib/currency';
 
 export default function ProductDetailPage({ params }) {
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { addToast } = useToast();
 
   useEffect(() => {
     fetchProduct();
@@ -39,21 +42,21 @@ export default function ProductDetailPage({ params }) {
       });
 
       if (res.status === 401) {
-        alert('Please login to add items to cart');
+        addToast('Please login to add items to cart', 'warning');
         router.push('/login');
         return;
       }
 
       
       if (res.ok) {
-        alert('Added to cart!');
-        router.push('/cart');
+        addToast('Added to cart successfully!', 'success');
+        setTimeout(() => router.push('/cart'), 1000);
       } else {
         const data = await res.json();
-        alert(data.error || 'Error adding to cart');
+        addToast(data.error || 'Error adding to cart', 'error');
       }
     } catch (error) {
-      alert('Error: ' + error.message);
+      addToast('Error: ' + error.message, 'error');
     }
   };
 
@@ -74,7 +77,7 @@ export default function ProductDetailPage({ params }) {
         <div>
           <h1 className="text-4xl font-bold mb-4 text-gray-800">{product.name}</h1>
           <p className="text-gray-600 mb-4">{product.category_name}</p>
-          <p className="text-3xl font-bold text-blue-600 mb-6">${product.price}</p>
+          <p className="text-3xl font-bold text-blue-600 mb-6">{formatPrice(product.price)}</p>
           <p className="text-gray-700 mb-6">{product.description}</p>
           
           <div className="mb-6">

@@ -1,12 +1,15 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '../../components/Toast';
+import { formatPrice } from '../../lib/currency';
 
 export default function CheckoutPage() {
   const [cart, setCart] = useState({ items: [], total: 0 });
   const [shippingAddress, setShippingAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { addToast } = useToast();
 
   useEffect(() => {
     fetchCart();
@@ -46,14 +49,14 @@ export default function CheckoutPage() {
 
       if (res.ok) {
         const data = await res.json();
-        alert('Order placed successfully! Order ID: ' + data.order_id);
-        router.push('/products');
+        addToast(`Order placed successfully! Order ID: ${data.order_id}`, 'success');
+        setTimeout(() => router.push('/products'), 1500);
       } else {
         const data = await res.json();
-        alert(data.error || 'Error placing order');
+        addToast(data.error || 'Error placing order', 'error');
       }
     } catch (error) {
-      alert('Error: ' + error.message);
+      addToast('Error: ' + error.message, 'error');
     } finally {
       setLoading(false);
     }
@@ -102,14 +105,14 @@ export default function CheckoutPage() {
               {cart.items.map(item => (
                 <div key={item.id} className="flex justify-between text-gray-700">
                   <span>{item.name} x {item.quantity}</span>
-                  <span>${(item.price * item.quantity).toFixed(2)}</span>
+                  <span>{formatPrice(item.price * item.quantity)}</span>
                 </div>
               ))}
             </div>
             <div className="border-t pt-4">
               <div className="flex justify-between mb-2">
                 <span className="text-gray-600">Subtotal:</span>
-                <span className="font-semibold text-gray-800">${cart.total.toFixed(2)}</span>
+                <span className="font-semibold text-gray-800">{formatPrice(cart.total)}</span>
               </div>
               <div className="flex justify-between mb-4">
                 <span className="text-gray-600">Shipping:</span>
