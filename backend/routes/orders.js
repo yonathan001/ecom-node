@@ -1,16 +1,31 @@
 const express = require('express');
 const db = require('../config/db');
-const { betterAuthMiddleware } = require('../middleware/better-auth');
+const { betterAuthMiddleware, adminAuthMiddleware } = require('../middleware/better-auth');
 
 const router = express.Router();
 
-// Get user's orders
+// Get all orders (admin) or user's orders
 router.get('/', betterAuthMiddleware, async (req, res) => {
   try {
-    const [orders] = await db.query(
-      'SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC',
-      [req.user.id]
-    );
+    let query;
+    let params;
+
+    if (req.user.is_admin) {
+      // Admin sees all orders with user info
+      query = `
+        SELECT o.*, u.name as user_name, u.email as user_email 
+        FROM orders o 
+        JOIN user u ON o.user_id = u.id 
+        ORDER BY o.created_at DESC
+      `;
+      params = [];
+    } else {
+      // Regular user sees only their orders
+      query = 'SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC';
+      params = [req.user.id];
+    }
+
+    const [orders] = await db.query(query, params);
 
     // Get order items for each order
     for (let order of orders) {
@@ -26,6 +41,7 @@ router.get('/', betterAuthMiddleware, async (req, res) => {
 
     res.json(orders);
   } catch (error) {
+    console.error('Get orders error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -110,10 +126,23 @@ router.post('/', betterAuthMiddleware, async (req, res) => {
 // Get single order
 router.get('/:id', betterAuthMiddleware, async (req, res) => {
   try {
-    const [orders] = await db.query(
-      'SELECT * FROM orders WHERE id = ? AND user_id = ?',
-      [req.params.id, req.user.id]
-    );
+    let query;
+    let params;
+
+    if (req.user.is_admin) {
+      query = `
+        SELECT o.*, u.name as user_name, u.email as user_email 
+        FROM orders o 
+        JOIN user u ON o.user_id = u.id 
+        WHERE o.id = ?
+      `;
+      params = [req.params.id];
+    } else {
+      query = 'SELECT * FROM orders WHERE id = ? AND user_id = ?';
+      params = [req.params.id, req.user.id];
+    }
+
+    const [orders] = await db.query(query, params);
 
     if (orders.length === 0) {
       return res.status(404).json({ error: 'Order not found' });
@@ -133,6 +162,37 @@ router.get('/:id', betterAuthMiddleware, async (req, res) => {
 
     res.json(order);
   } catch (error) {
+    console.error('Get order error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Update order status (admin only)
+router.put('/:id/status', betterAuthMiddleware, adminAuthMiddleware, async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({ error: 'Status is required' });
+    }
+
+    const validStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ error: 'Invalid status' });
+    }
+
+    const [result] = await db.query(
+      'UPDATE orders SET status = ? WHERE id = ?',
+      [status, req.params.id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    res.json({ message: 'Order status updated successfully' });
+  } catch (error) {
+    console.error('Update order status error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });

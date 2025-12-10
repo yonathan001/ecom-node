@@ -1,12 +1,14 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '../../components/Toast';
 
 export default function CheckoutPage() {
   const [cart, setCart] = useState({ items: [], total: 0 });
   const [shippingAddress, setShippingAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { addToast } = useToast();
 
   useEffect(() => {
     fetchCart();
@@ -46,14 +48,14 @@ export default function CheckoutPage() {
 
       if (res.ok) {
         const data = await res.json();
-        alert('Order placed successfully! Order ID: ' + data.order_id);
-        router.push('/products');
+        addToast(`Order placed successfully! Order ID: ${data.order_id}`, 'success');
+        setTimeout(() => router.push('/products'), 1500);
       } else {
         const data = await res.json();
-        alert(data.error || 'Error placing order');
+        addToast(data.error || 'Error placing order', 'error');
       }
     } catch (error) {
-      alert('Error: ' + error.message);
+      addToast('Error: ' + error.message, 'error');
     } finally {
       setLoading(false);
     }
