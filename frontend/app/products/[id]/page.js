@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '../../../components/Toast';
+import { formatPrice } from '../../../lib/currency';
 
 export default function ProductDetailPage({ params }) {
   const [product, setProduct] = useState(null);
@@ -76,7 +77,7 @@ export default function ProductDetailPage({ params }) {
         <div>
           <h1 className="text-4xl font-bold mb-4 text-gray-800">{product.name}</h1>
           <p className="text-gray-600 mb-4">{product.category_name}</p>
-          <p className="text-3xl font-bold text-blue-600 mb-6">${product.price}</p>
+          <p className="text-3xl font-bold text-blue-600 mb-6">{formatPrice(product.price)}</p>
           <p className="text-gray-700 mb-6">{product.description}</p>
           
           <div className="mb-6">

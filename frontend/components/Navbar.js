@@ -44,15 +44,18 @@ export default function Navbar() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
             </div>
-            <span className="text-xl font-bold text-gray-900">eCommerce</span>
+            <span className="text-xl font-bold text-gray-900">ecom</span>
           </Link>
           
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-1">
             <Link 
               href="/products" 
-              className="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+              className="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all flex items-center"
             >
+              <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
               Products
             </Link>
             
@@ -147,9 +150,12 @@ export default function Navbar() {
             <div className="flex flex-col space-y-2">
               <Link 
                 href="/products" 
-                className="px-4 py-2 text-gray-700 hover:bg-blue-50 rounded-lg transition-all"
+                className="px-4 py-2 text-gray-700 hover:bg-blue-50 rounded-lg transition-all flex items-center"
                 onClick={() => setMobileMenuOpen(false)}
               >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
                 Products
               </Link>
               

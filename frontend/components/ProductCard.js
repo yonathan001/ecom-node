@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { formatPrice } from '../lib/currency';
 
 export default function ProductCard({ product }) {
   return (
@@ -60,7 +61,7 @@ export default function ProductCard({ product }) {
         {/* Price & Button */}
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-2xl font-bold text-gray-900">${product.price}</span>
+            <span className="text-2xl font-bold text-gray-900">{formatPrice(product.price)}</span>
           </div>
           <Link
             href={`/products/${product.id}`}

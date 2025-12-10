@@ -10,7 +10,7 @@ export default function Footer() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold">eCommerce</h3>
+              <h3 className="text-2xl font-bold">ecom</h3>
             </div>
             <p className="text-gray-400 max-w-md">Your one-stop shop for everything. Quality products, great prices, and exceptional service.</p>
           </div>
@@ -47,7 +47,7 @@ export default function Footer() {
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm mb-4 md:mb-0">
-              &copy; 2024 eCommerce. All rights reserved.
+              &copy; 2024 ecom. All rights reserved.
             </p>
             <div className="flex space-x-6">
               <a href="#" className="text-gray-400 hover:text-white transition">

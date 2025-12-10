@@ -213,7 +213,7 @@ export default function AdminPage() {
                         />
                       </td>
                       <td className="px-6 py-4 text-gray-900 font-medium">{product.name}</td>
-                      <td className="px-6 py-4 text-gray-900">${product.price}</td>
+                      <td className="px-6 py-4 text-gray-900">{product.price} ETB</td>
                       <td className="px-6 py-4">
                         <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                           product.stock > 10 ? 'bg-green-100 text-green-800' : 
@@ -278,7 +278,7 @@ export default function AdminPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-600 text-sm font-medium">Total Revenue</p>
-                  <p className="text-3xl font-bold text-gray-900 mt-2">${stats.totalRevenue}</p>
+                  <p className="text-3xl font-bold text-gray-900 mt-2">{stats.totalRevenue} ETB</p>
                 </div>
                 <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                   <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -327,7 +327,7 @@ export default function AdminPage() {
                           <p className="text-gray-500 text-sm">{order.user_email}</p>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-gray-900 font-semibold">${order.total_amount}</td>
+                      <td className="px-6 py-4 text-gray-900 font-semibold">{order.total_amount} ETB</td>
                       <td className="px-6 py-4">
                         <select
                           value={order.status}
@@ -348,7 +348,7 @@ export default function AdminPage() {
                         <button
                           onClick={() => {
                             const items = order.items.map(item => 
-                              `${item.name} x${item.quantity} - $${item.price}`
+                              `${item.name} x${item.quantity} - ${item.price} ETB`
                             ).join('\n');
                             addToast(`Order Items:\n${items}`, 'info');
                           }}
