@@ -39,20 +39,22 @@ model session {
 }
 
 model account {
-  id           String    @id @default(uuid())
-  userId       String
-  accountId    String
-  providerId   String
-  accessToken  String?   @db.Text
-  refreshToken String?   @db.Text
-  idToken      String?   @db.Text
-  expiresAt    DateTime?
-  password     String?   @db.Text
-  scope        String?   @db.Text
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id                    String    @id @default(uuid())
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?   @db.Text
+  refreshToken          String?   @db.Text
+  idToken               String?   @db.Text
+  expiresAt             DateTime?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  password              String?   @db.Text
+  scope                 String?   @db.Text
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
   
-  user         user      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                  user      @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@index([userId])
 }
