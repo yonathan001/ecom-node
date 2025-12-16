@@ -13,6 +13,8 @@ model user {
   email         String    @unique
   emailVerified Boolean   @default(false)
   image         String?   @db.Text
+  phone_number  String?
+  address       String?   @db.Text
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   is_admin      Boolean   @default(false)

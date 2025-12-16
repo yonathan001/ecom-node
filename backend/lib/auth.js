@@ -32,6 +32,14 @@ const auth = betterAuth({
         type: 'boolean',
         defaultValue: false,
         required: false,
+      },
+      phone_number: {
+        type: 'string',
+        required: false,
+      },
+      address: {
+        type: 'string',
+        required: false,
       }
     }
   },
