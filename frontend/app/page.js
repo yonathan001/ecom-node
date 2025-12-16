@@ -66,22 +66,6 @@ export default function Home() {
                   Browse Categories
                 </Link>
               </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 mt-12 pt-12 border-t border-gray-200">
-                <div>
-                  <div className="text-3xl font-bold text-gray-900">500+</div>
-                  <div className="text-sm text-gray-600">Products</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-gray-900">50K+</div>
-                  <div className="text-sm text-gray-600">Customers</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-gray-900">4.9★</div>
-                  <div className="text-sm text-gray-600">Rating</div>
-                </div>
-              </div>
             </div>
 
             {/* Right Content - Feature Cards */}
