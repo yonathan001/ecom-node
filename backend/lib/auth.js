@@ -40,6 +40,11 @@ const auth = betterAuth({
       address: {
         type: 'string',
         required: false,
+      },
+      role: {
+        type: 'string',
+        defaultValue: 'customer',
+        required: false,
       }
     }
   },

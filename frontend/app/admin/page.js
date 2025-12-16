@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '../../components/Toast';
 import AdminProductForm from '../../components/AdminProductForm';
 import ConfirmModal from '../../components/ConfirmModal';
+import DeliveryManagement from '../../components/DeliveryManagement';
+import OrderAssignment from '../../components/OrderAssignment';
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('products');
@@ -158,6 +160,26 @@ export default function AdminPage() {
           }`}
         >
           Orders
+        </button>
+        <button
+          onClick={() => setActiveTab('delivery')}
+          className={`flex-1 px-6 py-3 rounded-lg font-medium transition-all ${
+            activeTab === 'delivery'
+              ? 'bg-white text-blue-600 shadow-md'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          Delivery
+        </button>
+        <button
+          onClick={() => setActiveTab('assign')}
+          className={`flex-1 px-6 py-3 rounded-lg font-medium transition-all ${
+            activeTab === 'assign'
+              ? 'bg-white text-blue-600 shadow-md'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          Assign Orders
         </button>
       </div>
 
@@ -364,6 +386,16 @@ export default function AdminPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Delivery Tab */}
+      {activeTab === 'delivery' && (
+        <DeliveryManagement />
+      )}
+
+      {/* Assign Orders Tab */}
+      {activeTab === 'assign' && (
+        <OrderAssignment orders={orders} onOrderUpdated={fetchOrders} />
       )}
 
       {/* Delete Confirmation Modal */}

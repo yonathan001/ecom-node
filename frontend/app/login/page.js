@@ -27,8 +27,19 @@ export default function LoginPage() {
         setError(error.message || 'Login failed');
       } else {
         addToast('Login successful!', 'success');
+        
+        // Redirect based on user role
+        const user = data?.user;
+        let redirectPath = '/products';
+        
+        if (user?.role === 'delivery') {
+          redirectPath = '/delivery';
+        } else if (user?.is_admin) {
+          redirectPath = '/admin';
+        }
+        
         setTimeout(() => {
-          router.push('/products');
+          router.push(redirectPath);
           router.refresh();
         }, 500);
       }
