@@ -110,17 +110,20 @@ model cart {
 }
 
 model orders {
-  id               Int      @id @default(autoincrement())
-  user_id          String
-  total_amount     Decimal  @db.Decimal(10, 2)
-  status           String   @default("pending")
-  shipping_address String   @db.Text
-  created_at       DateTime @default(now())
+  id                Int      @id @default(autoincrement())
+  user_id           String
+  total_amount      Decimal  @db.Decimal(10, 2)
+  status            String   @default("pending")
+  payment_status    String   @default("pending")
+  payment_reference String?  @unique
+  shipping_address  String   @db.Text
+  created_at        DateTime @default(now())
   
-  user             user          @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  order_items      order_items[]
+  user              user          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  order_items       order_items[]
   
   @@index([user_id])
+  @@index([payment_reference])
 }
 
 model order_items {
